@@ -4,17 +4,16 @@ metadata:
   annotations:
     build.appstudio.openshift.io/repo: https://github.com/gbenhaim/testrepo?rev={{revision}}
     build.appstudio.redhat.com/commit_sha: '{{revision}}'
-    build.appstudio.redhat.com/pull_request_number: '{{pull_request_number}}'
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
     pipelinesascode.tekton.dev/max-keep-runs: "3"
-    pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch
+    pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
       == "main"
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: new-import-flow
     appstudio.openshift.io/component: testrepo
     pipelines.appstudio.openshift.io/type: build
-  name: testrepo-on-pull-request
+  name: testrepo-on-push
   namespace: user-ns1
 spec:
   params:
@@ -22,10 +21,8 @@ spec:
     value: Dockerfile
   - name: git-url
     value: '{{source_url}}'
-  - name: image-expires-after
-    value: 5d
   - name: output-image
-    value: registry-service.kind-registry/test-component:on-pr-{{revision}}
+    value: registry-service.kind-registry/test-component:{{revision}}
   - name: revision
     value: '{{revision}}'
   pipelineSpec:
